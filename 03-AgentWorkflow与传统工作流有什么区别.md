@@ -159,7 +159,7 @@ Workflow 提供稳定的流程治理能力，Agent 提供灵活的智能决策�
 ## 6 总结
 
 Workflow 和 Agent 并不是替代关系，而是企业级 AI 系统中的两个重要组成部分。
-
+```markdown
                    User
                      │
                      ▼
@@ -167,7 +167,7 @@ Workflow 和 Agent 并不是替代关系，而是企业级 AI 系统中的两个
                      │
      ┌───────────────┼───────────────┐
      ▼               ▼               ▼
- 普通任务        Agent Task      普通任务
+  普通任务        Agent Task        普通任务
                      │
                      ▼
               Agent Runtime
@@ -175,7 +175,7 @@ Workflow 和 Agent 并不是替代关系，而是企业级 AI 系统中的两个
          ┌───────────┴───────────┐
          ▼                       ▼
         LLM                   Tools
-
+```
 > Workflow 负责整个业务流程
 > Agent Runtime 负责完成复杂任务。
 
