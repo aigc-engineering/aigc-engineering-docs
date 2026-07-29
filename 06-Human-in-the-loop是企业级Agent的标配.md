@@ -102,10 +102,10 @@ Human-in-the-loop 也因此成为 Long Running Agent 生命周期中的重要组
       ┌───────────────┼───────────────┐
       ▼               ▼               ▼
     State        Checkpoint        Event
-                                         │
-                           ┌─────────────┴─────────────┐
-                           ▼                           ▼
-                    GPU 完成通知                 Human Decision
+                      │
+        ┌─────────────┴─────────────┐
+        ▼                           ▼
+   GPU 完成通知                 Human Decision
 ```
 无论是 GPU 完成图片生成，还是用户确认角色方案，对于 Runtime 来说，本质都是事件。
 
