@@ -12,4 +12,4 @@
 6. Human-in-the-loop 是企业级 Agent 的标配
 7. Memory 是企业级 Agent 的长期记忆
 8. Event 才是 Agent Runtime 的驱动力
-9. 为什么企业级 Agent 需要 Runtime？
+9. Agent Runtime: 企业级 Agent 的核心
