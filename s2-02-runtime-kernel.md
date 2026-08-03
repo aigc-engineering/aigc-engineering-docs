@@ -5,7 +5,7 @@
 
 虽然它非常简单，但已经完成了 Runtime 最重要的职责：
 
-管理一次 Agent 的执行。
+> 管理一次 Agent 的执行。
 
 整个执行流程如下：
 
@@ -181,22 +181,48 @@ Execution Engine
 `v0.2-runtime-kernel`
 
 **目录结构**
+注意： 这里把context改造为了session，是为了避免和Go的标准包context冲突。
 ```
-aigc-agent-runtime/
-
-├── cmd/
-│   └── main.go
+aigc-agent-runtime
 │
-├── runtime/
-│   ├── agent.go
-│   ├── context.go
-│   └── runtime.go
+├── cmd
+│   └── runtime
+│       └── main.go
 │
-└── execution/
-    ├── engine.go
-    └── execution.go
+├── internal
+│   ├── agent
+│   │   └── agent.go
+│   ├── execution
+│   │   ├── execution.go
+│   │   └── engine.go
+│   ├── runtime
+│   │   └── runtime.go
+│   └── session
+│       └── session.go
 ```
+----------------------
+**Session**
+```Go
+package session
 
+type Session struct {
+	ID     string
+	Input  any
+	Output any
+}
+```
+----------------------
+**Agent**
+```Go
+package agent
+
+import "github.com/aigc-engineering/aigc-agent-runtime/internal/session"
+
+type Agent interface {
+	Execute(sess *session.Session) error
+}
+```
+----------------------
 **Execution**
 ```Go
 package execution
@@ -218,65 +244,98 @@ type Execution struct {
 Execution 表示一次运行实例。
 
 未来，Checkpoint、Trace、State 等信息都会逐步加入这个对象。
+----------------------
 
 **Engine**
 ```Go
 package execution
 
+import (
+	"github.com/aigc-engineering/aigc-agent-runtime/internal/agent"
+	"github.com/aigc-engineering/aigc-agent-runtime/internal/session"
+)
+
 type Engine struct{}
 
-func NewEngine() *Engine {
-    return &Engine{}
+func New() *Engine {
+	return &Engine{}
 }
 
 func (e *Engine) Execute(
-    agent runtime.Agent,
-    ctx runtime.Context,
+	agt agent.Agent,
+	sess *session.Session,
 ) error {
-    execution := &Execution{
-        ID: "run-001",
-        Status: StatusCreated,
-    }
-    execution.Status = StatusRunning
 
-    err := agent.Execute(ctx)
+	exec := &Execution{
+		ID:     "run-001",
+		Status: StatusCreated,
+	}
 
-    if err != nil {
-        execution.Status = StatusFailed
-        return err
-    }
+	exec.Status = StatusRunning
 
-    execution.Status = StatusCompleted
-    return nil
+	err := agt.Execute(sess)
+
+	if err != nil {
+		exec.Status = StatusFailed
+		return err
+	}
+
+	exec.Status = StatusCompleted
+
+	return nil
 }
 ```
 Execution Engine 专注于一件事情：
 > 驱动一次 Execution 完成整个生命周期。
 
+----------------------
 **Runtime**
 Runtime则变得非常简单：
 ```Go
 package runtime
 
+import (
+	"github.com/aigc-engineering/aigc-agent-runtime/internal/agent"
+	"github.com/aigc-engineering/aigc-agent-runtime/internal/execution"
+	"github.com/aigc-engineering/aigc-agent-runtime/internal/session"
+)
+
 type Runtime struct {
-    engine *execution.Engine
+	engine *execution.Engine
 }
 
-func NewRuntime() *Runtime {
-    return &Runtime{
-        engine: execution.NewEngine(),
-    }
+func New() *Runtime {
+	return &Runtime{
+		engine: execution.New(),
+	}
 }
 
 func (r *Runtime) Run(
-    agent Agent,
-    ctx Context,
+	agt agent.Agent,
+	sess *session.Session,
 ) error {
-    return r.engine.Execute(agent, ctx)
+
+	return r.engine.Execute(agt, sess)
+
 }
 ```
 整个 Runtime 只保留一个职责：
 > 协调 Execution Engine。
+
+整个 Runtime 的调用链变成：
+```
+Runtime
+    │
+    ▼
+Execution Engine
+    │
+    ▼
+Agent
+    │
+    ▼
+Session
+```
+可以看到，Runtime 不再直接负责 Agent 的执行，而是把执行职责委托给 Execution Engine。
 
 ## 5. Demo 演进
 本篇对应 Git Tag： `v0.2-runtime-kernel`
@@ -294,11 +353,8 @@ go run ./cmd
 输出：
 ```
 Execution created: run-001
-
 Execution running...
-
-Agent executing...
-
+Agent executing:  build runtime
 Execution completed.
 ```
 ## 6. 工程思考
