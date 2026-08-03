@@ -21,7 +21,7 @@
 工程实践: Building an Agent Runtime
 
 1. 从零开始：设计我们的 Agent Runtime
-2. Runtime Kernel：构建第一个可运行的 Runtime
+2. Execution Engine：Runtime 是如何驱动 Agent 的？
 3. State Machine：让 Runtime 拥有生命周期
 4. Event Bus：Runtime 的神经系统
 5. Scheduler：让 Runtime 真正跑起来
