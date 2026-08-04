@@ -244,6 +244,7 @@ type Execution struct {
 Execution 表示一次运行实例。
 
 未来，Checkpoint、Trace、State 等信息都会逐步加入这个对象。
+
 ----------------------
 
 **Engine**
@@ -289,8 +290,8 @@ Execution Engine 专注于一件事情：
 > 驱动一次 Execution 完成整个生命周期。
 
 ----------------------
+
 **Runtime**
-Runtime则变得非常简单：
 ```Go
 package runtime
 
