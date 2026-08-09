@@ -24,9 +24,9 @@
 2. Runtime Kernel：：为什么 Runtime 不直接调用 Agent？
 3. State Machine：让 Runtime 拥有生命周期
 4. Event Bus：Runtime 的神经系统
-5. Scheduler：让 Runtime 真正跑起来
-6. Tool Runtime：不仅仅是 Function Call
-7. Checkpoint：实现 Long Running
+5. Checkpoint：实现 Long Running
+6. Scheduler：让 Runtime 真正跑起来
+7. Tool Runtime：不仅仅是 Function Call
 8. Memory：让 Runtime 拥有长期记忆
 9. Human-in-the-loop：等待用户参与
 10. Observability：让 Runtime 可观测
