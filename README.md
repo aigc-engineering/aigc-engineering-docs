@@ -33,6 +33,8 @@
 11. Runtime Extension：让 Runtime 可以扩展
 12. Building an Agent Runtime：完整回顾
 
+Loop
+
 ```
                            User
                              │
