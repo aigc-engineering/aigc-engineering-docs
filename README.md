@@ -26,9 +26,9 @@
 4. Event Bus：Runtime 的神经系统
 5. Checkpoint：实现 Long Running
 6. Scheduler：让 Runtime 真正跑起来
-7. Tool Runtime：不仅仅是 Function Call
-8. Memory：让 Runtime 拥有长期记忆
-9. Human-in-the-loop：等待用户参与
+7. [Tool Runtime：不仅仅是 Function Call](s2-07-tool-runtime.md)
+8. [Memory：让 Runtime 拥有长期记忆](s2-08-memory.md)
+9. [Human-in-the-loop：等待用户参与](s2-09-hitl.md)
 10. Observability：让 Runtime 可观测
 11. Runtime Extension：让 Runtime 可以扩展
 12. Building an Agent Runtime：完整回顾
