@@ -29,38 +29,41 @@
 7. [Tool Runtime：不仅仅是 Function Call](s2-07-tool-runtime.md)
 8. [Memory：让 Runtime 拥有长期记忆](s2-08-memory.md)
 9. [Human-in-the-loop：等待用户参与](s2-09-hitl.md)
+9a. [Runtime 与 AI Loop：为什么 Agent 不能只靠传统编码](s2-09a-runtime-vs-ai-loop.md)
 10. Observability：让 Runtime 可观测
 11. Runtime Extension：让 Runtime 可以扩展
 12. Building an Agent Runtime：完整回顾
 
-Loop
 
+## 架构图
 ```
                            User
                              │
                     HTTP / SDK / CLI
                              │
-                   ┌─────────────────┐
-                   │ Agent Runtime   │
-                   └─────────────────┘
-                             │
-            ┌────────────────┼────────────────┐
-            ▼                ▼                ▼
-      Scheduler        State Machine      Event Bus
-            │                │                │
-            └────────────────┼────────────────┘
                              ▼
-                    Execution Engine
+                   ┌───────────────────┐
+                   │   Agent Runtime   │
+                   └─────────┬─────────┘
                              │
-      ┌───────────────┬───────────────┬───────────────┐
-      ▼               ▼               ▼
- Tool Runtime    Checkpoint       Memory Runtime
-      │               │               │
-      └───────────────┼───────────────┘
-                      ▼
-             Human-in-the-loop
-                      │
-                      ▼
-              Observability Layer
-         (Logs / Trace / Metrics / Replay)
+              ┌──────────────┼──────────────┐
+              ▼              ▼              ▼
+         Scheduler        Event Bus       Checkpoint
+              │              │              │
+              ▼              │              │
+            Engine ─────────┼──────────────┘
+              │              │
+              │              └──────────────► Observability
+              │
+              ├───────────────┬───────────────┐
+              │               │               │
+              ▼               ▼               ▼
+        Tool Runtime     Memory         Human-in-the-loop
+              │               │               │
+              └───────────────┴───────────────┘
+                              │
+                              ▼
+                    Execution State / Resume
 ```
+
+注：这里的 Event Bus 是横向基础设施，不是单独的一层；Human-in-the-loop 是执行中断/恢复的状态分支，而不是线性的最后一层。
