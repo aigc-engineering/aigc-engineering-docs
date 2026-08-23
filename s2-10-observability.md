@@ -327,7 +327,37 @@ func (e *Engine) Execute1(
 
 这说明 Runtime 的 Observability 不是静态日志，而是“状态变更事件流”。
 
-### 3.3 Memory 也可以成为观测的输出端
+### 3.3 关键判断：Observability 不是新内核，而是 Event Bus 的消费层
+
+这一点在整个章节里最重要：
+
+> 我们并不需要重写 Runtime 的调度器、状态机或执行器，来实现可观测性。
+
+在当前设计中，Runtime 已经完成了最关键的一步：在状态转换时发布事件。真正的观测层只是把这些事件消费掉，并把它们转成：
+
+- 日志
+- 监控指标
+- 失败追踪
+- 执行时序
+- 复盘和审计数据
+
+也就是说，最小可行的 Observability 是下面这个模式：
+
+```text
+Runtime 发布事件
+   ↓
+观察者订阅事件
+   ↓
+事件被写入日志 / 指标 / 存储 / 监控平台
+```
+
+这并不要求修改状态机或调度器，只需要让使用者充分消费 Event Bus。
+
+如果只是想在工程里做“可观测”，并不需要新增一套 Runtime 内部机制；最核心的能力，本来就已经存在于 Event Bus 之中。
+
+这也是为什么 Event Bus 在 Agent Runtime 里，不只是“一个消息通道”，而是“把执行事实变成审计和复盘材料的总入口”。
+
+### 3.4 Memory 也可以成为观测的输出端
 
 在 [internal/runtime/runtime.go](internal/runtime/runtime.go) 里，还有一个典型闭环：
 
@@ -656,3 +686,5 @@ func main() {
 如果我们再进一步，把这个观察器接到一个数据库、消息中间件或者监控系统里，就能从“本地事件流”升级为“生产级 Observability”。
 
 这时，Runtime 不再只是一段可以运行的代码，而是一个真正可以被监控、追踪、恢复和审计的执行系统。
+
+完整的代码示例可以在 [aigc-agent-runtime](https://github.com/aigc-engineering/aigc-agent-runtime/releases/tag/v0.10-observability) 找到。
