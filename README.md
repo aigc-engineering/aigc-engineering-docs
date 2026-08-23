@@ -30,7 +30,7 @@
 8. [Memory：让 Runtime 拥有长期记忆](s2-08-memory.md)
 9. [Human-in-the-loop：等待用户参与](s2-09-hitl.md)
 9a. [Runtime 与 AI Loop：为什么 Agent 不能只靠传统编码](s2-09a-runtime-vs-ai-loop.md)
-10. Observability：让 Runtime 可观测
+10. [Observability：让 Runtime 可观测](s2-10-observability.md)
 11. Runtime Extension：让 Runtime 可以扩展
 12. Building an Agent Runtime：完整回顾
 
